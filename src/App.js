@@ -12,86 +12,108 @@ const contactDetails = ['Gryffindor Tower, Hogwarts','Gryffindor Tower, Hogwarts
 
 const contacts = ['Harry', 'Ron'];
 
+const myContacts = {
+
+    1 : [['Harry'], ['Gryffindor Tower, Hogwarts']],
+    2 : [['Malfoy'], ['Dungeon, Hogwarts']]
+};
+
+
 
 export default class App extends React.Component {
 
     constructor(props){
         super(props);
         this.state = {
-            count: 0,
+            count: 1,
             showMyContact: false
 
         };
         // this.nextContact = this.nextContact.bind(this);
-        this.showContact = this.showContact.bind(this);
+        // this.showContact = this.showContact.bind(this);
     }
 
-    // nextContact() {
-    //
-    //     let numberOfContacts = contacts.length - 1;
-    //     if(this.state.count !== numberOfContacts) {
-    //         this.setState({count: this.state.count + 1});
-    //     } else {
-    //         this.setState({count: 0});
-    //     }
-    //
-    //     // let contactComponents = [contacts[this.state.count], contactDetails[this.state.count]];
-    //
-    //     // let contactOne = contacts.map((item, key) => contactComponents[key]);
-    //     // // console.log(key)
-    //     // console.log(contactOne)
-    //
-    // }
+    nextContact() {
+
+
+        let numberOfContacts = Object.values(myContacts).length;
+        // console.log("length of myContacts: " + numberOfContacts);
+        if(this.state.count !== numberOfContacts && this.state.showMyContact === true) {
+            this.setState({count: this.state.count + 1});
+        } else if(this.state.count === numberOfContacts && this.state.showMyContact === true) {
+            this.setState({count: 1});
+        }
+
+
+        // let contactComponents = [contacts[this.state.count], contactDetails[this.state.count]];
+
+        // let contactOne = contacts.map((item, key) => contactComponents[key]);
+        // // console.log(key)
+        // console.log(contactOne)
+
+    }
 
     showContact() {
         this.setState({showMyContact: !this.state.showMyContact})
-    }
+    };
 
 
 
     render() {
 
-        const styles = {
-            container: { display: 'flex', justifyContent: 'center', width: '100vw', height: 100, flexDirection: 'column', padding: 100 },
-            btn: { width: '100%', display: 'flex', justifyContent: 'center'},
-            h1: { border: '2px solid blue', padding: 5, display: 'flex'}
-        };
-
-        let contactComponents = [contacts[this.state.count], contactDetails[this.state.count]];
-
-        console.log(this.state.showMyContact)
+        let cssList = [
+            "List",
+            this.state.showMyContact ? "ListShow" : "ListHide"
+        ];
 
         return (
             <div>
-                <div style={ styles.container }>
+                <div className={"container"}>
 
-                     <TransitionGroup component={null}>
-                        { contactComponents.map((item, key) =>
-                            // ({id, item}) => (
-                            <CSSTransition
-                                in={this.state.showMyContact}
-                                // appear={true}
-                                key={key}
-                                timeout={800}
-                                classNames={"fade"}>
-                                    <h1 style={styles.h1}>
-                                        {
-                                            item
-                                        }
-                                    </h1>
-                            </CSSTransition>
+                    <div className={cssList.join(' ')} >
+                        <List myContent={myContacts[this.state.count]}/>
+                        <button className={"btn"} onClick={ this.nextContact.bind(this) }>Next</button>
+                    </div>
+                    <div className={"btn"}>
+                        <button onClick={ this.showContact.bind(this) }>show/hide</button>
 
-                        )}
-                    </TransitionGroup>
-
-                    <div style={ styles.btn }>
-                        <button onClick={ this.showContact }>show/hide</button>
                     </div>
                 </div>
             </div>
         )
     }
 }
+
+// const List = (props) => {
+//
+//     return (
+//         <div>
+//             <h1 className={"h1"}> { props.myContent[0] } </h1>
+//             <h1 className={"h1"}> { props.myContent[1] } </h1>
+//         </div>
+//     )
+// };
+
+const List = (props) => {
+
+    return (
+
+        <TransitionGroup component={null}>
+
+            {props.myContent.map((item, key) =>
+                <CSSTransition
+                    in={true}
+                    key={key}
+                    timeout={800}
+                    classNames={"fade"}
+                >
+                <h1 className={"h1"}> { item } </h1>
+
+                </CSSTransition>
+            )}
+        </TransitionGroup>
+    )
+};
 
 // const Slide = (props) => (
 //     <TransitionGroup component={ null }>
